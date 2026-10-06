@@ -1,8 +1,13 @@
 package com.example.najvecaLolcina;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 public class OrderItemRequest {
 
+    @NotNull
     private Long productId;
+    @Positive
     private int quantity;
 
     public Long getProductId() {
