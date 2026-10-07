@@ -176,7 +176,7 @@ public class OrderService {
             }
 
             for (OrderItem item : order.getOrderItemList()) {
-                var product = item.getProduct();
+                var product = productRepository.findByIdUpdate(item.getProduct().getId()).orElseThrow(()->new NoSuchElementException("There is no product with this id"));
 
                 product.setQuantity(
                         product.getQuantity() + item.getQuantity()
