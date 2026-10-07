@@ -85,7 +85,7 @@ public class OrderService {
 
          for(OrderItemRequest order:lista){
 
-             Product product = productRepository.findById(order.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+order.getProductId()));
+             Product product = productRepository.findByIdUpdate(order.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+order.getProductId()));
              if(product.getQuantity()< order.getQuantity() || order.getQuantity()<=0){
                  throw new WrongMethodTypeException("No amount");
              }
@@ -100,7 +100,7 @@ public class OrderService {
 
 
 
-             totalprice.add(product.getPrice().multiply(BigDecimal.valueOf(order.getQuantity())));
+            totalprice = totalprice.add(product.getPrice().multiply(BigDecimal.valueOf(order.getQuantity())));
          }
          if(coupon!=null) {
              var checkedCoupon = couponRepository.findCouponByCoupon(coupon).orElseThrow(()->new NoSuchElementException("Coupon is not valid"));
@@ -152,21 +152,43 @@ public class OrderService {
         var order = ordertest.get();
         return order.getOrderItemList().stream().map(orderItemMapper::toOrderItemDTO).toList();
     }
-@Transactional
+    @Transactional
     public OrderDTO changeStatusForOrder(OrderStatus newStatus, Long id) {
-        var order = orderRepository.findById(id).orElseThrow(()->new NoSuchElementException("There is no order with this id"));
-        if(order.getStatus().equals(newStatus))
-            throw new NoSuchElementException("This order is already with this status");
 
-        order.setStatus(newStatus);
-        if(newStatus.equals(OrderStatus.CANCELLED)) {
-            for(OrderItem items:order.getOrderItemList()){
-                var product = items.getProduct();
-                product.setQuantity(product.getQuantity()+ items.getQuantity());
+        var order = orderRepository.findById(id)
+                .orElseThrow(() ->
+                        new NoSuchElementException("There is no order with this id"));
+
+        OrderStatus oldStatus = order.getStatus();
+
+        if (oldStatus.equals(newStatus)) {
+            throw new NoSuchElementException("This order is already with this status");
+        }
+
+        if (newStatus.equals(OrderStatus.CANCELLED)) {
+
+            if (oldStatus != OrderStatus.PENDING &&
+                    oldStatus != OrderStatus.CONFIRMED) {
+
+                throw new IllegalStateException(
+                        "This order cannot be cancelled from its current status"
+                );
+            }
+
+            for (OrderItem item : order.getOrderItemList()) {
+                var product = item.getProduct();
+
+                product.setQuantity(
+                        product.getQuantity() + item.getQuantity()
+                );
+
                 productRepository.save(product);
             }
         }
+
+        order.setStatus(newStatus);
         orderRepository.save(order);
+
         return orderMapper.toOrderDTO(order);
     }
 

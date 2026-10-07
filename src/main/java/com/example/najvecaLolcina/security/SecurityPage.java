@@ -36,7 +36,7 @@ public class SecurityPage {
         return http.csrf(csrf-> csrf.disable())
                 .authorizeHttpRequests(authorize->authorize
                         .requestMatchers(HttpMethod.POST,"/login","/register").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/products","/product/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/products","/api/products/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -52,10 +52,6 @@ public class SecurityPage {
         return provider;
     }
 
-//    @Bean
-//    public AuthenticationManager manager(AuthenticationConfiguration configuration){
-//        return configuration.getAuthenticationManager();
-//    }
 
     @Bean
     public AuthenticationManager manager(AuthenticationConfiguration configuration){
