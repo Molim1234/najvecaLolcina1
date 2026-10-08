@@ -222,6 +222,7 @@ public class OrderService {
         return price.subtract(price.multiply(BigDecimal.valueOf(checkedCoupon.getPercentOfDscount()).divide(BigDecimal.valueOf(100))));
     }
 
+    @Transactional
     public void createCoupon(@Valid CouponDTO couponDTO) {
 
         if(couponRepository.findCouponByCoupon(couponDTO.getCoupon()).isPresent()){
