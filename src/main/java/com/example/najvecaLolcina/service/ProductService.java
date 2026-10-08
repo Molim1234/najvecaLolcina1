@@ -68,7 +68,7 @@ public class ProductService {
 
 @Transactional
     public ProductDTO updateProduct(@Valid CreateProductRequest createProductRequest, Long id) {
-        var product = productRepository.findById(id).orElseThrow(()->new NoSuchElementException("There is no product with this id"));
+        var product = productRepository.findByIdUpdate(id).orElseThrow(()->new NoSuchElementException("There is no product with this id"));
         var productType = productTypeRepository.findProductTypeByType(createProductRequest.getType()).orElseThrow(()->new NoSuchElementException("No type"));
 
         product.setQuantity(createProductRequest.getQuantity());
@@ -82,7 +82,7 @@ public class ProductService {
     @Transactional
     public ProductDTO patchProduct(Long id, Map<String, Object> updateText) {
 
-        var product = productRepository.findById(id).orElseThrow(()->new NoSuchElementException("No product with this id"));
+        var product = productRepository.findByIdUpdate(id).orElseThrow(()->new NoSuchElementException("No product with this id"));
 
         if(updateText.containsKey("id"))
             throw new IllegalArgumentException("Patch product should not has id");
