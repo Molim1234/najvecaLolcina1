@@ -45,7 +45,13 @@ public class CartService {
         if(product.getQuantity()<orderItemRequest.getQuantity())
             throw new NoSuchElementException("Not enough");
 
-        var authenticatedUser = returnAuthenticatedUser();
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        var authenticatedUser =
+                myyyUserRepo.findUserForUpdate(username);
 
         Cart cart = authenticatedUser.getCart();
         if (cart == null) {
