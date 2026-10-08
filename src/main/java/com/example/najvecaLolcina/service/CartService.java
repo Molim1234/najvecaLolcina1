@@ -41,7 +41,7 @@ public class CartService {
     @Transactional
     public void addProductToCart(OrderItemRequest orderItemRequest) {
 
-        var product = productRepository.findById(orderItemRequest.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+orderItemRequest.getProductId()));
+        var product = productRepository.findByIdUpdate(orderItemRequest.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+orderItemRequest.getProductId()));
         if(product.getQuantity()<orderItemRequest.getQuantity())
             throw new NoSuchElementException("Not enough");
 

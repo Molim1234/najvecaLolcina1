@@ -192,6 +192,7 @@ public class OrderService {
         return orderMapper.toOrderDTO(order);
     }
 
+    @Transactional
     public BigDecimal checkCoupon(String coupon) {
 
     var checkedCoupon = couponRepository.findCouponByCoupon(coupon).orElseThrow(()-> new NoSuchElementException("This coupon doesnt exist"));
