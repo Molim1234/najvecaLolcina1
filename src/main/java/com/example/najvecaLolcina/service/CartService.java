@@ -140,7 +140,10 @@ public class CartService {
     @Transactional
     public void plusOneProductFromCart(Long productId) {
 
-        var authenticatedUser = returnAuthenticatedUser();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        var authenticatedUser = myyyUserRepo.findUserForUpdate(username);
 
         var cart = authenticatedUser.getCart();
         if(cart==null){
@@ -148,7 +151,12 @@ public class CartService {
         }
         var cartItemForUpdateOrRemove = cartItemRepository.findByCartAndProductId(cart, productId).orElseThrow(()-> new NoSuchElementException("This user doesnt have this item in his cart with id "+productId));
 
-        var product = cartItemForUpdateOrRemove.getProduct();
+        var product = productRepository.findByIdUpdate(
+                cartItemForUpdateOrRemove.getProduct().getId()
+        ).orElseThrow(() -> new NoSuchElementException(
+                "There is no product with this id"
+        ));
+
         if(cartItemForUpdateOrRemove.getQuantity()>=product.getQuantity()){
             throw new NoSuchElementException("Product doesnt have enough quantity");
         }
@@ -160,10 +168,9 @@ public class CartService {
 
         var authenticatedUser = returnAuthenticatedUser();
 
-        var cart = authenticatedUser.getCart();
-        if(cart==null){
-            throw new NoSuchElementException("User doesnt have a cart");
-        }
+        var cart = cartRepository.findByUserForUpdate(authenticatedUser)
+                .orElseThrow(() ->
+                        new NoSuchElementException("Cart doesn't exist"));
 
         var items = cartItemRepository.findAllCartItems(cart);
         if(items.isEmpty()){
