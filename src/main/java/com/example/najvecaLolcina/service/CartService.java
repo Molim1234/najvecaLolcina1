@@ -43,7 +43,7 @@ public class CartService {
 
         var product = productRepository.findById(orderItemRequest.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+orderItemRequest.getProductId()));
         if(product.getQuantity()<orderItemRequest.getQuantity())
-            throw new NoSuchElementException("No enough");
+            throw new NoSuchElementException("Not enough");
 
         var authenticatedUser = returnAuthenticatedUser();
 

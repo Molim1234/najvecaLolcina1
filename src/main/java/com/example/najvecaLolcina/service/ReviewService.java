@@ -35,7 +35,7 @@ public class ReviewService {
     public void addReview(CreateReviewRequest createReviewRequest) {
         var user = returnAuthenticatedUser();
 
-        var product = productRepository.findById(createReviewRequest.getProductId()).orElseThrow(()->new NoSuchElementException("There is no product with this id "+createReviewRequest.getProductId()));
+        var product = productRepository.findByIdUpdate(createReviewRequest.getProductId()).orElseThrow(()->new NoSuchElementException("There is no product with this id "+createReviewRequest.getProductId()));
 
         var orderItem = orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED).orElseThrow(()->new NoSuchElementException("This user didnt get this product"));
 
