@@ -155,7 +155,7 @@ public class OrderService {
     @Transactional
     public OrderDTO changeStatusForOrder(OrderStatus newStatus, Long id) {
 
-        var order = orderRepository.findById(id)
+        var order = orderRepository.findByIdUpdate(id)
                 .orElseThrow(() ->
                         new NoSuchElementException("There is no order with this id"));
 
