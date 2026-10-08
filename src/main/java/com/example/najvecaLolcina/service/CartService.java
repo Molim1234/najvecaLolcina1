@@ -163,7 +163,7 @@ public class CartService {
         cartItemForUpdateOrRemove.setQuantity(cartItemForUpdateOrRemove.getQuantity()+1);
         cartItemRepository.save(cartItemForUpdateOrRemove);
     }
-
+@Transactional
     public CreateOrderRequest returnItemsForOrder(){
 
         var authenticatedUser = returnAuthenticatedUser();
