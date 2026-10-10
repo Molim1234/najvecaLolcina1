@@ -43,7 +43,7 @@ public class CartService {
 
         var product = productRepository.findByIdUpdate(orderItemRequest.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+orderItemRequest.getProductId()));
         if(product.getQuantity()<orderItemRequest.getQuantity())
-            throw new NoSuchElementException("Not enough");
+            throw new IllegalArgumentException("Not enough");
 
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
@@ -71,7 +71,7 @@ public class CartService {
             CartItem item = optionalCartItem.get();
             int number = item.getQuantity()+ orderItemRequest.getQuantity();
             if(number> product.getQuantity()){
-                throw new NoSuchElementException("Not enough quantity of product");
+                throw new IllegalArgumentException("Not enough quantity of product");
             }
             item.setQuantity(number);
             cartItem = item;
@@ -120,8 +120,6 @@ public class CartService {
             cartItemForUpdateOrRemove.setQuantity(cartItemForUpdateOrRemove.getQuantity()- orderItemRequest.getQuantity());
             cartItemRepository.save(cartItemForUpdateOrRemove);
         }
-
-
     }
 
     @Transactional

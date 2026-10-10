@@ -14,6 +14,12 @@ public class CreateReviewRequest {
 
     private String description;
 
+    public CreateReviewRequest(Long productId, int rate, String description) {
+        this.productId = productId;
+        this.rate = rate;
+        this.description = description;
+    }
+
     public Long getProductId() {
         return productId;
     }

@@ -59,8 +59,6 @@ public class ReviewService {
 
 
 
-
-
     public MyyyUser returnAuthenticatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userr = authentication.getName();
