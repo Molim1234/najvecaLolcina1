@@ -156,13 +156,13 @@ public class CartService {
         var cartItemForUpdateOrRemove = cartItemRepository.findByCartAndProductId(cart, productId).orElseThrow(()-> new NoSuchElementException("This user doesnt have this item in his cart with id "+productId));
 
         var product = productRepository.findByIdUpdate(
-                cartItemForUpdateOrRemove.getProduct().getId()
+               productId
         ).orElseThrow(() -> new NoSuchElementException(
                 "There is no product with this id"
         ));
 
         if(cartItemForUpdateOrRemove.getQuantity()>=product.getQuantity()){
-            throw new NoSuchElementException("Product doesnt have enough quantity");
+            throw new IllegalArgumentException("Product doesnt have enough quantity");
         }
         cartItemForUpdateOrRemove.setQuantity(cartItemForUpdateOrRemove.getQuantity()+1);
         cartItemRepository.save(cartItemForUpdateOrRemove);

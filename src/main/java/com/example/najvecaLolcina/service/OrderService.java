@@ -162,7 +162,7 @@ public class OrderService {
         OrderStatus oldStatus = order.getStatus();
 
         if (oldStatus.equals(newStatus)) {
-            throw new NoSuchElementException("This order is already with this status");
+            throw new IllegalArgumentException("This order is already with this status");
         }
 
         if (newStatus.equals(OrderStatus.CANCELLED)) {
@@ -198,7 +198,7 @@ public class OrderService {
     var checkedCoupon = couponRepository.findCouponByCoupon(coupon).orElseThrow(()-> new NoSuchElementException("This coupon doesnt exist"));
 
     if(checkedCoupon.getUses()<=0 || checkedCoupon.getExpiringDate().isBefore(LocalDateTime.now())){
-        throw new NoSuchElementException("Coupon expired");
+        throw new IllegalStateException("Coupon expired");
     }
         BigDecimal price= new BigDecimal(0);
 

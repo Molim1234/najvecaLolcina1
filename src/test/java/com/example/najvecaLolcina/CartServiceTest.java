@@ -386,7 +386,299 @@ public class CartServiceTest {
     }
 
 
+    @Test
+    void updateOneOrDeleteProduct_Exception(){
 
+        when(myyyUserRepo.findMyyyUserByName("testUser"))
+                .thenReturn(user);
+
+        user.setCart(null);
+
+        assertThrows(NoSuchElementException.class, ()->{cartService.updateOneOrDeleteProduct(1L);});
+
+        verify(cartItemRepository, never()).findByCartAndProductId(any(Cart.class), any(Long.class));
+        verify(cartItemRepository, never()).save(any(CartItem.class));
+        verify(cartItemRepository, never()).delete(any(CartItem.class));
+    }
+
+    @Test
+    void updateOneOrDeleteProduct_ExceptionTwo(){
+
+        when(myyyUserRepo.findMyyyUserByName("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+        user.setCart(cart);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, ()->{cartService.updateOneOrDeleteProduct(1L);});
+        verify(cartItemRepository).findByCartAndProductId(cart, 1L);
+        verify(cartItemRepository, never()).delete(any(CartItem.class));
+        verify(cartItemRepository, never()).save(any(CartItem.class));
+    }
+
+    @Test
+    void updateOneOrDeleteProduct_Full(){
+
+        when(myyyUserRepo.findMyyyUserByName("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+        var cartItem = new CartItem(1);
+        cart.addcartItem(cartItem);
+        user.setCart(cart);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.of(cartItem));
+
+        cartService.updateOneOrDeleteProduct(1L);
+
+        verify(cartItemRepository).delete(cartItem);
+        verify(cartItemRepository, never()).save(any(CartItem.class));
+    }
+
+    @Test
+        void updateOneOrDeleteProduct_FullTwo() {
+
+        when(myyyUserRepo.findMyyyUserByName("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+        var cartItem = new CartItem(2);
+        cart.addcartItem(cartItem);
+        user.setCart(cart);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.of(cartItem));
+
+        cartService.updateOneOrDeleteProduct(1L);
+
+        ArgumentCaptor<CartItem> captor = ArgumentCaptor.forClass(CartItem.class);
+
+        verify(cartItemRepository).save(captor.capture());
+        verify(cartItemRepository, never()).delete(any(CartItem.class));
+
+        var result = captor.getValue();
+
+        assertEquals(1, result.getQuantity());
+    }
+
+
+    @Test
+    void plusOneProductFromCart_Exception() {
+        when(myyyUserRepo.findUserForUpdate("testUser"))
+                .thenReturn(user);
+
+        user.setCart(null);
+
+        assertThrows(
+                NoSuchElementException.class,
+                () -> cartService.plusOneProductFromCart(1L)
+        );
+
+        verify(myyyUserRepo).findUserForUpdate("testUser");
+
+        verify(cartItemRepository, never())
+                .findByCartAndProductId(any(Cart.class), any(Long.class));
+
+        verify(productRepository, never())
+                .findByIdUpdate(any(Long.class));
+
+        verify(cartItemRepository, never())
+                .save(any(CartItem.class));
+    }
+
+    @Test
+    void plusOneProductFromCart_ExceptionTwo(){
+
+        when(myyyUserRepo.findUserForUpdate("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+
+        user.setCart(cart);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, ()->{cartService.plusOneProductFromCart(1L);});
+        verify(productRepository, never())
+                .findByIdUpdate(any(Long.class));
+
+        verify(cartItemRepository, never())
+                .save(any(CartItem.class));
+    }
+
+    @Test
+    void plusOneProductFromCart_ExceptionThree(){
+
+        when(myyyUserRepo.findUserForUpdate("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+
+        var cartItem = new CartItem(10);
+
+        user.setCart(cart);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.of(cartItem));
+
+        when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, ()->{cartService.plusOneProductFromCart(1L);});
+        verify(cartItemRepository, never())
+                .save(any(CartItem.class));
+    }
+
+    @Test
+    void plusOneProductFromCart_ExceptionFour(){
+
+        when(myyyUserRepo.findUserForUpdate("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+
+        var cartItem = new CartItem(10);
+
+        var product = new Product(
+                "lol", 10, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        user.setCart(cart);
+
+        cart.addcartItem(cartItem);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.of(cartItem));
+
+        when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.of(product));
+
+        assertThrows(IllegalArgumentException.class, ()->{cartService.plusOneProductFromCart(1L);});
+        verify(cartItemRepository, never())
+                .save(any(CartItem.class));
+    }
+
+    @Test
+    void plusOneProductFromCart_Full(){
+
+        when(myyyUserRepo.findUserForUpdate("testUser"))
+                .thenReturn(user);
+
+        var cart = new Cart();
+
+        var cartItem = new CartItem(10);
+
+        var product = new Product(
+                "lol", 15, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        user.setCart(cart);
+
+        cart.addcartItem(cartItem);
+
+        when(cartItemRepository.findByCartAndProductId(cart, 1L)).thenReturn(Optional.of(cartItem));
+
+        when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.of(product));
+
+        cartService.plusOneProductFromCart(1L);
+
+        ArgumentCaptor<CartItem> captor = ArgumentCaptor.forClass(CartItem.class);
+
+        verify(cartItemRepository).save(captor.capture());
+
+        var result = captor.getValue();
+
+        assertEquals(11, result.getQuantity());
+    }
+
+    @Test
+    void returnItemsForOrder_Exception(){
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+
+        user.setCart(null);
+
+        when(cartRepository.findByUserForUpdate(user)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, ()->{cartService.returnItemsForOrder();});
+        verify(cartItemRepository, never()).findAllCartItems(any(Cart.class));
+    }
+
+    @Test
+    void returnItemsForOrder_ExceptionTwo(){
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+
+        var cart = new Cart();
+
+        List<CartItem> listica = new ArrayList<>();
+
+        user.setCart(cart);
+
+        when(cartRepository.findByUserForUpdate(user)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findAllCartItems(cart)).thenReturn(listica);
+        assertThrows(NoSuchElementException.class, ()->{cartService.returnItemsForOrder();});
+
+        verify(cartItemMapper, never()).toOrderItemRequest(any(CartItem.class));
+    }
+
+    @Test
+    void returnItemsForOrder_Full(){
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+
+        var product = new Product(
+                "lol", 15, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        var orderItemRequest = new OrderItemRequest(1L,10);
+
+        var cart = new Cart();
+        var cartItem = new CartItem(10);
+
+        cart.addcartItem(cartItem);
+        List<CartItem> listica = new ArrayList<>();
+        listica.add(cartItem);
+
+        user.setCart(cart);
+
+        when(cartRepository.findByUserForUpdate(user)).thenReturn(Optional.of(cart));
+        when(cartItemRepository.findAllCartItems(cart)).thenReturn(listica);
+        when(cartItemMapper.toOrderItemRequest(cartItem))
+                .thenReturn(orderItemRequest);
+
+        var result = cartService.returnItemsForOrder();
+
+        assertEquals(result.getOrderItemRequestList().get(0).getQuantity(), 10);
+        assertEquals(result.getOrderItemRequestList().get(0).getProductId(), 1L);
+        assertEquals(1, result.getOrderItemRequestList().size());
+    }
+
+    @Test
+    void cleanCartAfterOrder(){
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+
+        var cartItem1 = new CartItem(10);
+        var cartItem2 = new CartItem(5);
+
+        var cart = new Cart();
+
+        cart.addcartItem(cartItem1);
+        cart.addcartItem(cartItem2);
+
+        user.setCart(cart);
+
+        ArgumentCaptor<Cart> captor = ArgumentCaptor.forClass(Cart.class);
+
+        cartService.cleanCartAfterOrder();
+
+        verify(cartRepository).save(captor.capture());
+
+        var result = captor.getValue();
+
+        assertTrue(result.getCartItemList().isEmpty());
+    }
 
 
 
