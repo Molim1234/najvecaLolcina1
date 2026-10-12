@@ -1,5 +1,6 @@
 package com.example.najvecaLolcina.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -12,6 +13,7 @@ public class CreateProductRequest {
     @PositiveOrZero
     private int quantity;
     @Positive
+    @Column(precision = 19, scale = 2)
     private BigDecimal price;
     @NotBlank
     private String description;

@@ -7,12 +7,13 @@ import com.example.najvecaLolcina.enumm.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     @Query("select o from OrderItem o where o.product=:p and o.order in " +
             "(select orr from Order orr where orr.user=:myyyUser and orr.status=:status)")
-    public Optional<OrderItem> findOrderItemMethod(Product p, MyyyUser myyyUser, OrderStatus status);
+    public List<OrderItem> findOrderItemMethod(Product p, MyyyUser myyyUser, OrderStatus status);
 
 }

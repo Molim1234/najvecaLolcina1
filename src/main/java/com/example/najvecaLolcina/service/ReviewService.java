@@ -37,7 +37,9 @@ public class ReviewService {
 
         var product = productRepository.findByIdUpdate(createReviewRequest.getProductId()).orElseThrow(()->new NoSuchElementException("There is no product with this id "+createReviewRequest.getProductId()));
 
-        var orderItem = orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED).orElseThrow(()->new NoSuchElementException("This user didnt get this product"));
+        if(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED).isEmpty()){
+            throw new NoSuchElementException("Person didnt order this product");
+        }
 
         if(reviewRepository.existsByMyyyUserAndProduct(user,product)){
             throw new IllegalArgumentException("You have already reviewed this product");

@@ -83,7 +83,7 @@ public class ProductService {
     public ProductDTO patchProduct(Long id, PatchProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Product not found"));
+                        new NoSuchElementException("Product not found"));
 
         if (request.getName() != null) {
             product.setName(request.getName());

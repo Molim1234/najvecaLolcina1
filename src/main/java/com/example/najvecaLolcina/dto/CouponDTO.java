@@ -1,10 +1,7 @@
 package com.example.najvecaLolcina.dto;
 
 
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -19,6 +16,7 @@ public class CouponDTO {
     private int uses;
    @DateTimeFormat
    @Future
+   @NotNull
     private LocalDateTime expiringDate;
 
 
