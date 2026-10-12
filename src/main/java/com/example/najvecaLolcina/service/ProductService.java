@@ -20,17 +20,16 @@ import java.util.NoSuchElementException;
 @Service
 public class ProductService {
 
-    private ProductRepository productRepository;
-    private ProductMapper productMapper;
-    private ProductTypeRepository productTypeRepository;
-    private JsonMapper jsonMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
+    private final ProductTypeRepository productTypeRepository;
 
 
-    public ProductService(ProductRepository productRepository, ProductMapper productMapper, ProductTypeRepository productTypeRepository, JsonMapper jsonMapper) {
+
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper, ProductTypeRepository productTypeRepository) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
         this.productTypeRepository = productTypeRepository;
-        this.jsonMapper = jsonMapper;
     }
 
     public Page<ProductDTO> returnAllProducts(String type, Pageable pageable) {

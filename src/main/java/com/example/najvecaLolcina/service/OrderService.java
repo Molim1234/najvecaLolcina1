@@ -38,11 +38,11 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final MyyyUserRepo myyyUserRepo;
     private final OrderMApper orderMapper;
-    private CartService cartService;
-    private OrderItemMapper orderItemMapper;
-    private CouponRepository couponRepository;
-    private ShippingAddressMapper shippingAddressMapper;
-    private CouponMapper couponMapper;
+    private final CartService cartService;
+    private final OrderItemMapper orderItemMapper;
+    private final CouponRepository couponRepository;
+    private final ShippingAddressMapper shippingAddressMapper;
+    private final CouponMapper couponMapper;
 
 
     public OrderService(OrderItemRepository orderItemRepository, OrderRepository orderRepository, ProductRepository productRepository, MyyyUserRepo myyyUserRepo, OrderMApper orderMapper, CartService cartService, OrderItemMapper orderItemMapper, CouponRepository couponRepository, ShippingAddressMapper shippingAddressMapper, CouponMapper couponMapper) {

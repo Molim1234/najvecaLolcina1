@@ -19,10 +19,10 @@ import java.util.NoSuchElementException;
 @Service
 public class ReviewService {
 
-    private MyyyUserRepo myyyUserRepo;
-    private ProductRepository productRepository;
-    private OrderItemRepository orderItemRepository;
-    private ReviewRepository reviewRepository;
+    private final MyyyUserRepo myyyUserRepo;
+    private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final ReviewRepository reviewRepository;
 
     public ReviewService(MyyyUserRepo myyyUserRepo, ProductRepository productRepository, OrderItemRepository orderItemRepository, ReviewRepository reviewRepository) {
         this.myyyUserRepo = myyyUserRepo;

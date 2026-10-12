@@ -24,11 +24,11 @@ import java.util.Optional;
 @Service
 public class CartService {
 
-    private CartItemRepository cartItemRepository;
-    private ProductRepository productRepository;
-    private CartRepository cartRepository;
-    private MyyyUserRepo myyyUserRepo;
-    private CartItemMapper cartItemMapper;
+    private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final MyyyUserRepo myyyUserRepo;
+    private final CartItemMapper cartItemMapper;
 
     public CartService(CartItemRepository cartItemRepository, ProductRepository productRepository, CartRepository cartRepository, MyyyUserRepo myyyUserRepo, CartItemMapper cartItemMapper) {
         this.cartItemRepository = cartItemRepository;
