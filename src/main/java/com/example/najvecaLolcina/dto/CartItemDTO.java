@@ -1,27 +1,21 @@
-package com.example.najvecaLolcina.entity;
-
+package com.example.najvecaLolcina.dto;
 
 import java.math.BigDecimal;
 
-public class OrderItemDTO {
+public class CartItemDTO {
 
     private Long id;
     private String productType;
     private String productName;
-    private BigDecimal price;
-    private int qunatity;
+    private int quantityInCart;
     private BigDecimal totalPrice;
 
-    public OrderItemDTO(Long id, String productType, String productName, BigDecimal price, int qunatity, BigDecimal totalPrice) {
+    public CartItemDTO(Long id, String productType, String productName, int quantityInCart, BigDecimal totalPrice) {
         this.id = id;
         this.productType = productType;
         this.productName = productName;
-        this.price = price;
-        this.qunatity = qunatity;
+        this.quantityInCart = quantityInCart;
         this.totalPrice = totalPrice;
-    }
-
-    public OrderItemDTO() {
     }
 
     public Long getId() {
@@ -48,20 +42,12 @@ public class OrderItemDTO {
         this.productName = productName;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public int getQuantityInCart() {
+        return quantityInCart;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public int getQunatity() {
-        return qunatity;
-    }
-
-    public void setQunatity(int qunatity) {
-        this.qunatity = qunatity;
+    public void setQuantityInCart(int quantityInCart) {
+        this.quantityInCart = quantityInCart;
     }
 
     public BigDecimal getTotalPrice() {

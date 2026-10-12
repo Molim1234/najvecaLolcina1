@@ -1,6 +1,6 @@
 package com.example.najvecaLolcina.controller;
 
-import com.example.najvecaLolcina.entity.CreateReviewRequest;
+import com.example.najvecaLolcina.dto.CreateReviewRequest;
 import com.example.najvecaLolcina.service.ReviewService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

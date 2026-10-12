@@ -1,6 +1,6 @@
 package com.example.najvecaLolcina.mapper;
 import com.example.najvecaLolcina.entity.ShippingAddress;
-import com.example.najvecaLolcina.entity.ShippingAddressDTO;
+import com.example.najvecaLolcina.dto.ShippingAddressDTO;
 import org.springframework.stereotype.Component;
 
 @Component

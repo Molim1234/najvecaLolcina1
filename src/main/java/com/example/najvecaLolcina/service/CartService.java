@@ -1,12 +1,12 @@
 package com.example.najvecaLolcina.service;
 
-import com.example.najvecaLolcina.CreateOrderRequest;
+import com.example.najvecaLolcina.dto.CreateOrderRequest;
 import com.example.najvecaLolcina.entity.Cart;
-import com.example.najvecaLolcina.entity.CartItemDTO;
+import com.example.najvecaLolcina.dto.CartItemDTO;
 import com.example.najvecaLolcina.entity.CartItem;
 import com.example.najvecaLolcina.entity.MyyyUser;
 import com.example.najvecaLolcina.mapper.CartItemMapper;
-import com.example.najvecaLolcina.OrderItemRequest;
+import com.example.najvecaLolcina.dto.OrderItemRequest;
 import com.example.najvecaLolcina.repository.CartItemRepository;
 import com.example.najvecaLolcina.repository.CartRepository;
 import com.example.najvecaLolcina.repository.ProductRepository;

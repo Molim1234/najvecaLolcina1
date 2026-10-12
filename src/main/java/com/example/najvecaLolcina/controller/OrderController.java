@@ -1,8 +1,11 @@
 package com.example.najvecaLolcina.controller;
 
 
-import com.example.najvecaLolcina.entity.*;
-import com.example.najvecaLolcina.OrderStatus;
+import com.example.najvecaLolcina.dto.CouponDTO;
+import com.example.najvecaLolcina.dto.OrderDTO;
+import com.example.najvecaLolcina.dto.OrderItemDTO;
+import com.example.najvecaLolcina.dto.ShippingAddressDTO;
+import com.example.najvecaLolcina.enumm.OrderStatus;
 import com.example.najvecaLolcina.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;

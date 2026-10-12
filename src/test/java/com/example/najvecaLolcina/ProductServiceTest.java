@@ -1,8 +1,8 @@
 package com.example.najvecaLolcina;
 
-import com.example.najvecaLolcina.entity.CreateProductRequest;
+import com.example.najvecaLolcina.dto.CreateProductRequest;
 import com.example.najvecaLolcina.entity.Product;
-import com.example.najvecaLolcina.entity.ProductDTO;
+import com.example.najvecaLolcina.dto.ProductDTO;
 import com.example.najvecaLolcina.entity.ProductType;
 import com.example.najvecaLolcina.mapper.ProductMapper;
 import com.example.najvecaLolcina.repository.ProductRepository;

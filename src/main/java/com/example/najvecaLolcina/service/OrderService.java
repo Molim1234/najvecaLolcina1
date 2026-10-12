@@ -1,13 +1,17 @@
 package com.example.najvecaLolcina.service;
 
-import com.example.najvecaLolcina.CreateOrderRequest;
+import com.example.najvecaLolcina.dto.CreateOrderRequest;
+import com.example.najvecaLolcina.dto.CouponDTO;
+import com.example.najvecaLolcina.dto.OrderDTO;
+import com.example.najvecaLolcina.dto.OrderItemDTO;
+import com.example.najvecaLolcina.dto.ShippingAddressDTO;
 import com.example.najvecaLolcina.entity.*;
 import com.example.najvecaLolcina.mapper.CouponMapper;
 import com.example.najvecaLolcina.mapper.OrderItemMapper;
 import com.example.najvecaLolcina.mapper.ShippingAddressMapper;
-import com.example.najvecaLolcina.OrderItemRequest;
+import com.example.najvecaLolcina.dto.OrderItemRequest;
 import com.example.najvecaLolcina.mapper.OrderMApper;
-import com.example.najvecaLolcina.OrderStatus;
+import com.example.najvecaLolcina.enumm.OrderStatus;
 import com.example.najvecaLolcina.repository.CouponRepository;
 import com.example.najvecaLolcina.repository.OrderItemRepository;
 import com.example.najvecaLolcina.repository.OrderRepository;
@@ -18,7 +22,7 @@ import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.lang.invoke.WrongMethodTypeException;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -87,7 +91,7 @@ public class OrderService {
 
              Product product = productRepository.findByIdUpdate(order.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+order.getProductId()));
              if(product.getQuantity()< order.getQuantity() || order.getQuantity()<=0){
-                 throw new WrongMethodTypeException("No amount");
+                 throw new IllegalArgumentException("No amount");
              }
              product.setQuantity(product.getQuantity()- order.getQuantity());
 

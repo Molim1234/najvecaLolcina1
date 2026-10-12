@@ -1,6 +1,6 @@
-package com.example.najvecaLolcina.entity;
+package com.example.najvecaLolcina.dto;
 
-import com.example.najvecaLolcina.OrderStatus;
+import com.example.najvecaLolcina.enumm.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

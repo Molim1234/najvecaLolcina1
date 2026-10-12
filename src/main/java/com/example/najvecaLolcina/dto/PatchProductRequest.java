@@ -1,19 +1,26 @@
-package com.example.najvecaLolcina.entity;
+package com.example.najvecaLolcina.dto;
+
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 
-public class ProductDTO {
+public class PatchProductRequest {
 
+    @Size(min = 2, max = 100)
     private String name;
-    private String type;
+
+    @PositiveOrZero
+    private Integer quantity;
+
+    @Positive
     private BigDecimal price;
+
+    @Size(max = 2000)
     private String description;
 
-    public ProductDTO(String name, String type, BigDecimal price, String description) {
-        this.name = name;
-        this.type = type;
-        this.price = price;
-        this.description = description;
+    public PatchProductRequest() {
     }
 
     public String getName() {
@@ -24,12 +31,12 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public BigDecimal getPrice() {
@@ -48,3 +55,4 @@ public class ProductDTO {
         this.description = description;
     }
 }
+

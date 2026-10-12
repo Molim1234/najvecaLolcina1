@@ -2,7 +2,7 @@ package com.example.najvecaLolcina.entity;
 
 
 
-import com.example.najvecaLolcina.OrderStatus;
+import com.example.najvecaLolcina.enumm.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 

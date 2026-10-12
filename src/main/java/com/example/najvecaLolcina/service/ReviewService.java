@@ -1,9 +1,9 @@
 package com.example.najvecaLolcina.service;
 
-import com.example.najvecaLolcina.entity.CreateReviewRequest;
+import com.example.najvecaLolcina.dto.CreateReviewRequest;
 import com.example.najvecaLolcina.entity.MyyyUser;
 import com.example.najvecaLolcina.entity.Review;
-import com.example.najvecaLolcina.OrderStatus;
+import com.example.najvecaLolcina.enumm.OrderStatus;
 import com.example.najvecaLolcina.repository.OrderItemRepository;
 import com.example.najvecaLolcina.repository.ProductRepository;
 import com.example.najvecaLolcina.repository.ReviewRepository;

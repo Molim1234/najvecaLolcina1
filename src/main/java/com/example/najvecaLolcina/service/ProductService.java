@@ -1,19 +1,19 @@
 package com.example.najvecaLolcina.service;
-import com.example.najvecaLolcina.entity.CreateProductRequest;
+import com.example.najvecaLolcina.dto.CreateProductRequest;
+import com.example.najvecaLolcina.dto.PatchProductRequest;
 import com.example.najvecaLolcina.entity.Product;
 import com.example.najvecaLolcina.repository.ProductTypeRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.example.najvecaLolcina.entity.ProductDTO;
+import com.example.najvecaLolcina.dto.ProductDTO;
 import com.example.najvecaLolcina.mapper.ProductMapper;
 import com.example.najvecaLolcina.repository.ProductRepository;
 
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.json.JsonMapper;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 
@@ -80,22 +80,29 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductDTO patchProduct(Long id, Map<String, Object> updateText) {
 
-        var product = productRepository.findByIdUpdate(id).orElseThrow(()->new NoSuchElementException("No product with this id"));
+    public ProductDTO patchProduct(Long id, PatchProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Product not found"));
 
-        if(updateText.containsKey("id"))
-            throw new IllegalArgumentException("Patch product should not has id");
-
-        if(updateText.containsKey("type")){
-            String type = (String) updateText.get("type");
-            var findType = productTypeRepository.findProductTypeByType(type).orElseThrow(()->new NoSuchElementException("There is no type with this name"));
-            product.setProductType(findType);
-            updateText.remove("type");
+        if (request.getName() != null) {
+            product.setName(request.getName());
         }
 
-        jsonMapper.updateValue(product, updateText);
-        return productMapper.toProductDTO(productRepository.save(product));
+        if (request.getQuantity() != null) {
+            product.setQuantity(request.getQuantity());
+        }
 
+        if (request.getPrice() != null) {
+            product.setPrice(request.getPrice());
+        }
+
+        if (request.getDescription() != null) {
+            product.setDescription(request.getDescription());
+        }
+
+        return productMapper.toProductDTO(productRepository.save(product));
     }
+
 }

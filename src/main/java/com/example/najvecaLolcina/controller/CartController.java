@@ -1,8 +1,8 @@
 package com.example.najvecaLolcina.controller;
 
 
-import com.example.najvecaLolcina.entity.CartItemDTO;
-import com.example.najvecaLolcina.OrderItemRequest;
+import com.example.najvecaLolcina.dto.CartItemDTO;
+import com.example.najvecaLolcina.dto.OrderItemRequest;
 import com.example.najvecaLolcina.service.CartService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;

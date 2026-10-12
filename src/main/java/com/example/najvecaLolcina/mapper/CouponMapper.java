@@ -1,7 +1,7 @@
 package com.example.najvecaLolcina.mapper;
 
 import com.example.najvecaLolcina.entity.Coupon;
-import com.example.najvecaLolcina.entity.CouponDTO;
+import com.example.najvecaLolcina.dto.CouponDTO;
 import org.springframework.stereotype.Component;
 
 @Component

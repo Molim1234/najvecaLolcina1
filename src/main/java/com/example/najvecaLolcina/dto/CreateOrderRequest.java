@@ -1,4 +1,4 @@
-package com.example.najvecaLolcina;
+package com.example.najvecaLolcina.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

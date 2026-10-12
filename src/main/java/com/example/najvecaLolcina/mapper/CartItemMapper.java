@@ -1,8 +1,8 @@
 package com.example.najvecaLolcina.mapper;
 
 import com.example.najvecaLolcina.entity.CartItem;
-import com.example.najvecaLolcina.entity.CartItemDTO;
-import com.example.najvecaLolcina.OrderItemRequest;
+import com.example.najvecaLolcina.dto.CartItemDTO;
+import com.example.najvecaLolcina.dto.OrderItemRequest;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

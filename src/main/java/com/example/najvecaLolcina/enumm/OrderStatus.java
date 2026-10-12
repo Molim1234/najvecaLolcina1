@@ -1,4 +1,4 @@
-package com.example.najvecaLolcina;
+package com.example.najvecaLolcina.enumm;
 
 public enum OrderStatus {
     PENDING,
