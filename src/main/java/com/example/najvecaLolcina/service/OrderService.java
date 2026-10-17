@@ -162,8 +162,8 @@ public class OrderService {
 
         OrderStatus oldStatus = order.getStatus();
 
-        if (oldStatus.equals(newStatus)) {
-            throw new IllegalArgumentException("This order is already with this status");
+        if (oldStatus.equals(newStatus) || oldStatus.equals(OrderStatus.CANCELLED)) {
+            throw new IllegalArgumentException("This order is already with this status, or order was cancelled before");
         }
 
         if (newStatus.equals(OrderStatus.CANCELLED)) {

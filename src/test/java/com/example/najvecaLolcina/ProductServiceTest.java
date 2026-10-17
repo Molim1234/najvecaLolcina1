@@ -356,6 +356,23 @@ void findProductTest(){
         assertEquals("novi opis", result.getDescription());
     }
 
+    @Test
+    void patchProduct_ShouldThrowExceptionWhenProductDoesNotExist() {
+
+        var patch = new PatchProductRequest();
+        patch.setQuantity(2);
+
+        when(productRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                NoSuchElementException.class,
+                () -> productService.patchProduct(1L, patch)
+        );
+
+        verify(productRepository, never()).save(any(Product.class));
+    }
+
 
 
 }
