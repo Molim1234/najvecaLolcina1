@@ -1,8 +1,6 @@
 package com.example.najvecaLolcina;
 
-import com.example.najvecaLolcina.dto.CouponDTO;
-import com.example.najvecaLolcina.dto.OrderDTO;
-import com.example.najvecaLolcina.dto.OrderItemDTO;
+import com.example.najvecaLolcina.dto.*;
 import com.example.najvecaLolcina.entity.*;
 import com.example.najvecaLolcina.enumm.OrderStatus;
 import com.example.najvecaLolcina.mapper.CouponMapper;
@@ -15,6 +13,7 @@ import com.example.najvecaLolcina.repository.OrderRepository;
 import com.example.najvecaLolcina.repository.ProductRepository;
 import com.example.najvecaLolcina.security.MyyyUserRepo;
 import com.example.najvecaLolcina.service.OrderService;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -391,6 +390,137 @@ public class OrderServiceTest {
         assertEquals("coupon", result.getCoupon());
         assertEquals(20, result.getPercentOfDscount());
     }
+
+    @Test
+    void createOrder_Exception(){
+
+        var createOrderReq = new CreateOrderRequest();
+
+        List<OrderItemRequest> lista = List.of(new OrderItemRequest(1L, 5));
+        createOrderReq.setOrderItemRequestList(lista);
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+        when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, ()->{orderService.createOrder(createOrderReq, null, null);});
+
+        verify(orderItemRepository, never()).save(any(OrderItem.class));
+    }
+    @Test
+    void createOrder_ExceptionTwo(){
+
+        var product = new Product(
+                "lol", 3, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        var createOrderReq = new CreateOrderRequest();
+
+        List<OrderItemRequest> lista = List.of(new OrderItemRequest(1L, 5));
+        createOrderReq.setOrderItemRequestList(lista);
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+        when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.of(product));
+
+        assertThrows(IllegalArgumentException.class, ()->{orderService.createOrder(createOrderReq, null, null);});
+
+        verify(orderItemRepository, never()).save(any(OrderItem.class));
+    }
+
+
+    @Test
+    void createOrder_ExceptionThree(){
+
+        var product = new Product(
+                "lol", 12, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        var adress = new ShippingAddress();
+        var adressDTO = new ShippingAddressDTO(null, null, null, null, null, null);
+        var createOrderReq = new CreateOrderRequest();
+
+        List<OrderItemRequest> lista = List.of(new OrderItemRequest(1L, 5));
+        createOrderReq.setOrderItemRequestList(lista);
+
+        when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
+        when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.of(product));
+        when(shippingAddressMapper.toAdress(adressDTO)).thenReturn(adress);
+        when(orderRepository.save(any(Order.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+
+        orderService.createOrder(createOrderReq, null, adressDTO);
+
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+
+        verify(productRepository).save(captor.capture());
+
+        var result = captor.getValue();
+
+        assertEquals(7, result.getQuantity());
+    }
+
+
+    @Test
+    void createOrder_ShouldCalculateTotalPriceWithCoupon() {
+
+        var product = new Product(
+                "lol", 12, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        var coupon = new Coupon(
+                "coupon", 20, 5, LocalDateTime.now().plusDays(2)
+        );
+
+        var shippingAddressDTO = new ShippingAddressDTO(
+                "Test", "User", "123456789",
+                "test@test.com", "Budva", null
+        );
+
+        var address = new ShippingAddress();
+
+        var createOrderRequest = new CreateOrderRequest();
+        createOrderRequest.setOrderItemRequestList(
+                List.of(new OrderItemRequest(1L, 5))
+        );
+
+        when(myyyUserRepo.findMyyyUserByName("testUser"))
+                .thenReturn(user);
+
+        when(productRepository.findByIdUpdate(1L))
+                .thenReturn(Optional.of(product));
+
+        when(couponRepository.findCouponByCoupon("coupon"))
+                .thenReturn(Optional.of(coupon));
+
+        when(shippingAddressMapper.toAdress(shippingAddressDTO))
+                .thenReturn(address);
+
+        when(orderRepository.save(any(Order.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        orderService.createOrder(
+                createOrderRequest, "coupon", shippingAddressDTO
+        );
+
+        ArgumentCaptor<Order> captor =
+                ArgumentCaptor.forClass(Order.class);
+
+        verify(orderRepository, times(2)).save(captor.capture());
+
+        var result = captor.getValue();
+
+        assertEquals(
+                0,
+                BigDecimal.valueOf(40).compareTo(result.getTotalPrice())
+        );
+
+        assertEquals("coupon", result.getAppliedCouponCode());
+        assertEquals(4, coupon.getUses());
+    }
+
 
 
 }

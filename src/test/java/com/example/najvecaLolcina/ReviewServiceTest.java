@@ -91,7 +91,7 @@ public class ReviewServiceTest {
         CreateReviewRequest createReviewRequest = new CreateReviewRequest(1L, 5, "Good product");
 
         when(productRepository.findByIdUpdate(createReviewRequest.getProductId())).thenReturn(Optional.of(product));
-        when(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED)).thenReturn(Optional.empty());
+        when(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED)).thenReturn(List.of());
 
         assertThrows(NoSuchElementException.class, () -> {reviewService.addReview(createReviewRequest);});
 
@@ -112,7 +112,7 @@ public class ReviewServiceTest {
         OrderItem orderItem = new OrderItem(BigDecimal.valueOf(10), 5);
 
         when(productRepository.findByIdUpdate(createReviewRequest.getProductId())).thenReturn(Optional.of(product));
-        when(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED)).thenReturn(Optional.of(orderItem));
+        when(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED)).thenReturn(List.of(orderItem));
         when(reviewRepository.existsByMyyyUserAndProduct(user, product)).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, ()-> {reviewService.addReview(createReviewRequest);});
@@ -136,7 +136,7 @@ public class ReviewServiceTest {
         OrderItem orderItem = new OrderItem(BigDecimal.valueOf(10), 5);
 
         when(productRepository.findByIdUpdate(createReviewRequest.getProductId())).thenReturn(Optional.of(product));
-        when(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED)).thenReturn(Optional.of(orderItem));
+        when(orderItemRepository.findOrderItemMethod(product, user, OrderStatus.DELIVERED)).thenReturn(List.of(orderItem));
         when(reviewRepository.existsByMyyyUserAndProduct(user, product)).thenReturn(false);
 
         reviewService.addReview(createReviewRequest);

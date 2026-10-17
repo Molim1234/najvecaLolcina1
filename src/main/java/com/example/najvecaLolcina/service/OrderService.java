@@ -68,12 +68,9 @@ public class OrderService {
 
 
     @Transactional
-    public OrderDTO createOrder(CreateOrderRequest createOrderRequest, String coupon, ShippingAddressDTO shippingAddressDTO){
+    public OrderDTO createOrder(@Valid CreateOrderRequest createOrderRequest, String coupon, ShippingAddressDTO shippingAddressDTO){
 
          var lista = createOrderRequest.getOrderItemRequestList();
-
-         if(lista.isEmpty())
-             throw new NoSuchElementException();
 
         BigDecimal totalprice= new BigDecimal(0);
         Order or = new Order();
@@ -90,8 +87,8 @@ public class OrderService {
          for(OrderItemRequest order:lista){
 
              Product product = productRepository.findByIdUpdate(order.getProductId()).orElseThrow(()->new NoSuchElementException("No product with id "+order.getProductId()));
-             if(product.getQuantity()< order.getQuantity() || order.getQuantity()<=0){
-                 throw new IllegalArgumentException("No amount");
+             if(product.getQuantity()< order.getQuantity()){
+                 throw new IllegalArgumentException("Not enough amount");
              }
              product.setQuantity(product.getQuantity()- order.getQuantity());
 

@@ -1,6 +1,7 @@
 package com.example.najvecaLolcina;
 
 import com.example.najvecaLolcina.dto.CreateProductRequest;
+import com.example.najvecaLolcina.dto.PatchProductRequest;
 import com.example.najvecaLolcina.entity.Product;
 import com.example.najvecaLolcina.dto.ProductDTO;
 import com.example.najvecaLolcina.entity.ProductType;
@@ -271,8 +272,89 @@ void findProductTest(){
     verify(productRepository, never()).findAll(pageable);
 }
 
+@Test
+    void patchProduct_ShouldReturnRightQuantity(){
+
+    var patch = new PatchProductRequest();
+    patch.setQuantity(2);
+
+    var product = new Product("lol", 10, BigDecimal.valueOf(10), "lol");
+    product.setId(1L);
+
+    when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+    productService.patchProduct(1L, patch);
+
+    ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+
+    verify(productRepository).save(captor.capture());
+
+    var result = captor.getValue();
+
+    assertEquals(2, result.getQuantity());
+}
 
 
+    @Test
+    void patchProduct_ShouldReturnRightDescription() {
+
+        var patch = new PatchProductRequest();
+        patch.setDescription("novi opis");
+
+        var product = new Product(
+                "lol", 10, BigDecimal.valueOf(10), "lol"
+        );
+        product.setId(1L);
+
+        when(productRepository.findById(1L))
+                .thenReturn(Optional.of(product));
+
+        productService.patchProduct(1L, patch);
+
+        ArgumentCaptor<Product> captor =
+                ArgumentCaptor.forClass(Product.class);
+
+        verify(productRepository).save(captor.capture());
+
+        var result = captor.getValue();
+
+        assertEquals("novi opis", result.getDescription());
+    }
+
+    @Test
+    void patchProduct_ShouldUpdateMultipleFields() {
+
+        var patch = new PatchProductRequest();
+        patch.setName("novi naziv");
+        patch.setQuantity(5);
+        patch.setPrice(BigDecimal.valueOf(30));
+        patch.setDescription("novi opis");
+
+        var product = new Product(
+                "lol", 10, BigDecimal.valueOf(10), "stari opis"
+        );
+        product.setId(1L);
+
+        when(productRepository.findById(1L))
+                .thenReturn(Optional.of(product));
+
+        productService.patchProduct(1L, patch);
+
+        ArgumentCaptor<Product> captor =
+                ArgumentCaptor.forClass(Product.class);
+
+        verify(productRepository).save(captor.capture());
+
+        var result = captor.getValue();
+
+        assertEquals("novi naziv", result.getName());
+        assertEquals(5, result.getQuantity());
+        assertEquals(
+                0,
+                BigDecimal.valueOf(30).compareTo(result.getPrice())
+        );
+        assertEquals("novi opis", result.getDescription());
+    }
 
 
 
