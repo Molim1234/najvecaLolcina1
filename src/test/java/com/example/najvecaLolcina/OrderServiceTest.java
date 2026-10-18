@@ -221,7 +221,7 @@ public class OrderServiceTest {
         var orderDTO = new OrderDTO();
         orderDTO.setStatus(OrderStatus.DELIVERED);
 
-        order.setStatus(OrderStatus.PENDING);
+        order.setStatus(OrderStatus.SHIPPED);
 
         when(orderRepository.findByIdUpdate(1L)).thenReturn(Optional.of(order));
         when(orderMapper.toOrderDTO(order)).thenReturn(orderDTO);
@@ -236,6 +236,26 @@ public class OrderServiceTest {
 
         assertEquals(cap.getStatus(), OrderStatus.DELIVERED);
         assertEquals(result.getStatus(), OrderStatus.DELIVERED);
+    }
+
+    @Test
+    void changeStatusForOrder_ShouldRejectSkippedStatus() {
+
+        var order = new Order();
+        order.setStatus(OrderStatus.PENDING);
+
+        when(orderRepository.findByIdUpdate(1L))
+                .thenReturn(Optional.of(order));
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> orderService.changeStatusForOrder(
+                        OrderStatus.DELIVERED, 1L
+                )
+        );
+
+        verify(orderRepository, never()).save(any(Order.class));
+        verify(productRepository, never()).save(any(Product.class));
     }
 
     @Test

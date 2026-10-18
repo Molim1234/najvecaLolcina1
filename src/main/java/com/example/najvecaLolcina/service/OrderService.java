@@ -45,7 +45,7 @@ public class OrderService {
     private final ShippingAddressMapper shippingAddressMapper;
     private final CouponMapper couponMapper;
 
-    private OrderStatus[] statuses = {OrderStatus.PENDING,
+    private static final OrderStatus[] statuses = {OrderStatus.PENDING,
             OrderStatus.CONFIRMED,
             OrderStatus.SHIPPED,
             OrderStatus.DELIVERED};
@@ -167,12 +167,6 @@ public class OrderService {
     @Transactional
     public OrderDTO changeStatusForOrder(OrderStatus newStatus, Long id) {
 
-//                PENDING,
-//                CONFIRMED,
-//                SHIPPED,
-//                DELIVERED,
-//                CANCELLED
-
         var order = orderRepository.findByIdUpdate(id)
                 .orElseThrow(() ->
                         new NoSuchElementException("There is no order with this id"));
@@ -182,11 +176,25 @@ public class OrderService {
         if (oldStatus.equals(newStatus) || oldStatus.equals(OrderStatus.CANCELLED)) {
             throw new IllegalArgumentException("This order is already with this status, or order was cancelled before");
         }
-        if(!newStatus.equals(OrderStatus.CANCELLED) && !newStatus.equals(OrderStatus.DELIVERED)){
-            for(int i=0;i<statuses.length;i++){
-                if(statuses[i].equals(oldStatus) && !statuses[i+1].equals(newStatus)){
-                    throw new IllegalStateException("You cant put this status for this order");
+        if (!newStatus.equals(OrderStatus.CANCELLED)) {
+
+            boolean validTransition = false;
+
+            for (int i = 0; i < statuses.length - 1; i++) {
+
+                if (statuses[i].equals(oldStatus)
+                        && statuses[i + 1].equals(newStatus)) {
+
+                    validTransition = true;
+                    break;
                 }
+            }
+
+            if (!validTransition) {
+                throw new IllegalStateException(
+                        "You can't change status from "
+                                + oldStatus + " to " + newStatus
+                );
             }
         }
 
