@@ -29,7 +29,7 @@ public class CartController {
         return cartService.returnCArtItems();
     }
 
-    @DeleteMapping("/cart/items/{id}")
+    @DeleteMapping("/cart/product/{id}")
     public void deleteProductFromCart(@PathVariable Long id){
         cartService.deleteProductFromCart(id);
     }

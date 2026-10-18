@@ -130,8 +130,6 @@ public class OrderService {
                 RoundingMode.HALF_UP
         );
 
-        or.setTotalPrice(totalprice);
-
          or.setTotalPrice(totalprice);
          or.setShippingAddress(shippingAddressMapper.toAdress(shippingAddressDTO));
 

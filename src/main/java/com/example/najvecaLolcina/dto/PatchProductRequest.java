@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 public class PatchProductRequest {
 
     @Size(min = 2, max = 100)
-    @NotBlank
     private String name;
 
     @PositiveOrZero
