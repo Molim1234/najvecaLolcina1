@@ -1,25 +1,24 @@
 package com.example.najvecaLolcina.dto;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
 public class PatchProductRequest {
 
     @Size(min = 2, max = 100)
+    @NotBlank
     private String name;
 
     @PositiveOrZero
     private Integer quantity;
 
     @Positive
-    @Column(precision = 19, scale = 2)
+    @Digits(integer = 17, fraction = 2)
     private BigDecimal price;
 
-    @Size(max = 2000)
+    @Size(max = 250)
     private String description;
 
     public PatchProductRequest() {
@@ -33,8 +32,7 @@ public class PatchProductRequest {
         this.name = name;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public Integer getQuantity() {return quantity;
     }
 
     public void setQuantity(Integer quantity) {

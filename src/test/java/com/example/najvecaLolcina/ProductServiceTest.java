@@ -373,6 +373,44 @@ void findProductTest(){
         verify(productRepository, never()).save(any(Product.class));
     }
 
+    @Test
+    void patchProduct_ShouldKeepOtherFieldsUnchanged() {
+
+        var product = new Product(
+                "Razer Headset",
+                10,
+                new BigDecimal("49.99"),
+                "Original description"
+        );
+        product.setId(1L);
+
+        var patch = new PatchProductRequest();
+        patch.setQuantity(5);
+
+        when(productRepository.findById(1L))
+                .thenReturn(Optional.of(product));
+
+        productService.patchProduct(1L, patch);
+
+        ArgumentCaptor<Product> captor =
+                ArgumentCaptor.forClass(Product.class);
+
+        verify(productRepository).save(captor.capture());
+
+        var savedProduct = captor.getValue();
+
+        assertEquals("Razer Headset", savedProduct.getName());
+        assertEquals(5, savedProduct.getQuantity());
+        assertEquals(
+                0,
+                new BigDecimal("49.99").compareTo(savedProduct.getPrice())
+        );
+        assertEquals(
+                "Original description",
+                savedProduct.getDescription()
+        );
+    }
+
 
 
 }

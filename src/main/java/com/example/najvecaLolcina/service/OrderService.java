@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 import java.util.List;
@@ -43,6 +44,11 @@ public class OrderService {
     private final CouponRepository couponRepository;
     private final ShippingAddressMapper shippingAddressMapper;
     private final CouponMapper couponMapper;
+
+    private OrderStatus[] statuses = {OrderStatus.PENDING,
+            OrderStatus.CONFIRMED,
+            OrderStatus.SHIPPED,
+            OrderStatus.DELIVERED};
 
 
     public OrderService(OrderItemRepository orderItemRepository, OrderRepository orderRepository, ProductRepository productRepository, MyyyUserRepo myyyUserRepo, OrderMApper orderMapper, CartService cartService, OrderItemMapper orderItemMapper, CouponRepository couponRepository, ShippingAddressMapper shippingAddressMapper, CouponMapper couponMapper) {
@@ -111,15 +117,20 @@ public class OrderService {
              }
              checkedCoupon.setUses(checkedCoupon.getUses()-1);
 
-
-             totalprice = totalprice.subtract(
-                     totalprice
-                             .multiply(BigDecimal.valueOf(checkedCoupon.getPercentOfDscount()))
-                             .divide(BigDecimal.valueOf(100))
+             totalprice = calculatePriceAfterDiscount(
+                     totalprice,
+                     checkedCoupon.getPercentOfDscount()
              );
+
              or.setAppliedCouponCode(checkedCoupon.getCoupon());
              couponRepository.save(checkedCoupon);
          }
+        totalprice = totalprice.setScale(
+                2,
+                RoundingMode.HALF_UP
+        );
+
+        or.setTotalPrice(totalprice);
 
          or.setTotalPrice(totalprice);
          or.setShippingAddress(shippingAddressMapper.toAdress(shippingAddressDTO));
@@ -156,6 +167,12 @@ public class OrderService {
     @Transactional
     public OrderDTO changeStatusForOrder(OrderStatus newStatus, Long id) {
 
+//                PENDING,
+//                CONFIRMED,
+//                SHIPPED,
+//                DELIVERED,
+//                CANCELLED
+
         var order = orderRepository.findByIdUpdate(id)
                 .orElseThrow(() ->
                         new NoSuchElementException("There is no order with this id"));
@@ -164,6 +181,13 @@ public class OrderService {
 
         if (oldStatus.equals(newStatus) || oldStatus.equals(OrderStatus.CANCELLED)) {
             throw new IllegalArgumentException("This order is already with this status, or order was cancelled before");
+        }
+        if(!newStatus.equals(OrderStatus.CANCELLED) && !newStatus.equals(OrderStatus.DELIVERED)){
+            for(int i=0;i<statuses.length;i++){
+                if(statuses[i].equals(oldStatus) && !statuses[i+1].equals(newStatus)){
+                    throw new IllegalStateException("You cant put this status for this order");
+                }
+            }
         }
 
         if (newStatus.equals(OrderStatus.CANCELLED)) {
@@ -220,7 +244,10 @@ public class OrderService {
 
         }
 
-        return price.subtract(price.multiply(BigDecimal.valueOf(checkedCoupon.getPercentOfDscount()).divide(BigDecimal.valueOf(100))));
+        return calculatePriceAfterDiscount(
+                price,
+                checkedCoupon.getPercentOfDscount()
+        );
     }
 
     @Transactional
@@ -232,4 +259,18 @@ public class OrderService {
 
         couponRepository.save(couponMapper.toCoupon(couponDTO));
     }
+
+    private BigDecimal calculatePriceAfterDiscount(
+            BigDecimal totalPrice,
+            int discountPercent
+    ) {
+        return totalPrice
+                .multiply(BigDecimal.valueOf(100L - discountPercent))
+                .divide(
+                        BigDecimal.valueOf(100),
+                        2,
+                        RoundingMode.HALF_UP
+                );
+    }
+
 }

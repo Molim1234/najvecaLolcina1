@@ -13,7 +13,6 @@ import com.example.najvecaLolcina.repository.OrderRepository;
 import com.example.najvecaLolcina.repository.ProductRepository;
 import com.example.najvecaLolcina.security.MyyyUserRepo;
 import com.example.najvecaLolcina.service.OrderService;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -329,7 +328,7 @@ public class OrderServiceTest {
 
         var result = orderService.checkCoupon("coupon");
 
-        assertEquals(BigDecimal.valueOf(0), result);
+        assertEquals(0, result.compareTo(BigDecimal.ZERO));
     }
 
     @Test
@@ -519,6 +518,43 @@ public class OrderServiceTest {
 
         assertEquals("coupon", result.getAppliedCouponCode());
         assertEquals(4, coupon.getUses());
+    }
+
+    @Test
+    void checkCoupon_ShouldRoundPriceToTwoDecimals() {
+
+        var product = new Product(
+                "Test product",
+                5,
+                new BigDecimal("12.99"),
+                "Description"
+        );
+        product.setId(1L);
+
+        var cartItem = new CartItem(1);
+        cartItem.setProduct(product);
+
+        var cart = new Cart();
+        cart.addcartItem(cartItem);
+
+        var coupon = new Coupon(
+                "coupon",
+                20,
+                5,
+                LocalDateTime.now().plusDays(2)
+        );
+
+        user.setCart(cart);
+
+        when(couponRepository.findCouponByCoupon("coupon"))
+                .thenReturn(Optional.of(coupon));
+
+        when(myyyUserRepo.findMyyyUserByName("testUser"))
+                .thenReturn(user);
+
+        var result = orderService.checkCoupon("coupon");
+
+        assertEquals(new BigDecimal("10.39"), result);
     }
 
 
