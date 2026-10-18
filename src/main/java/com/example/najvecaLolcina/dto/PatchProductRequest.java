@@ -8,6 +8,10 @@ import java.math.BigDecimal;
 public class PatchProductRequest {
 
     @Size(min = 2, max = 100)
+    @Pattern(
+            regexp = "(?s).*\\S.*",
+            message = "Name must contain at least one non-whitespace character"
+    )
     private String name;
 
     @PositiveOrZero

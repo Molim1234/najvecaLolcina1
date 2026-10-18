@@ -101,8 +101,8 @@ public class OrderService {
              OrderItem orderItem = new OrderItem(product.getPrice(), order.getQuantity());
 
              orderItem.setProduct(product);
-             orderItemRepository.save(orderItem);
              or.addOrderItem(orderItem);
+             orderItemRepository.save(orderItem);
              productRepository.save(product);
 
 

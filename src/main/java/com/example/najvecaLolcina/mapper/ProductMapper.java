@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ProductMapper {
 
     public ProductDTO toProductDTO(Product product){
-        return new ProductDTO(product.getName(), product.getProductType().getType(), product.getPrice(), product.getDescription());
+        return new ProductDTO(product.getId(),product.getName(), product.getProductType().getType(), product.getPrice(), product.getDescription());
     }
 
 

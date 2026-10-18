@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 
 public class ProductDTO {
 
+    private Long id;
     private String name;
     private String type;
     private BigDecimal price;
     private String description;
 
-    public ProductDTO(String name, String type, BigDecimal price, String description) {
+    public ProductDTO(Long id, String name, String type, BigDecimal price, String description) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.price = price;

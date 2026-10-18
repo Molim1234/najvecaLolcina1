@@ -49,7 +49,7 @@ void findProductTest(){
 
     var product = new Product("lol", 10, BigDecimal.valueOf(10), "lol");
     product.setId(1L);
-    var productDTO = new ProductDTO("lol", "Mouse", new BigDecimal(10), "lol");
+    var productDTO = new ProductDTO(1L, "lol", "Mouse", new BigDecimal(10), "lol");
 
     when(productRepository.findById(1L)).thenReturn(Optional.of(product));
     when(productMapper.toProductDTO(product)).thenReturn(productDTO);
@@ -106,7 +106,7 @@ void findProductTest(){
         when(productRepository.findWithSameName(createProductRequest.getName())).thenReturn(Optional.empty());
         when(productTypeRepository.findProductTypeByType(createProductRequest.getType())).thenReturn(Optional.of(productType));
 
-        var productDTO = new ProductDTO(createProductRequest.getName(), productType.getType(), createProductRequest.getPrice(), createProductRequest.getDescription());
+        var productDTO = new ProductDTO(1L, createProductRequest.getName(), productType.getType(), createProductRequest.getPrice(), createProductRequest.getDescription());
 
         when(productRepository.save(any(Product.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -171,7 +171,7 @@ void findProductTest(){
     when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.of(product));
     when(productTypeRepository.findProductTypeByType(createProductRequest.getType())).thenReturn(Optional.of(productType));
 
-    var productDTO = new ProductDTO(createProductRequest.getName(), createProductRequest.getType(), createProductRequest.getPrice(), createProductRequest.getDescription());
+    var productDTO = new ProductDTO(1L, createProductRequest.getName(), createProductRequest.getType(), createProductRequest.getPrice(), createProductRequest.getDescription());
 
     when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
     when(productMapper.toProductDTO(any(Product.class))).thenReturn(productDTO);
@@ -223,7 +223,7 @@ void findProductTest(){
             1
     );
 
-    ProductDTO dto = new ProductDTO("lol", "Mouse", BigDecimal.valueOf(10), "lol");
+    ProductDTO dto = new ProductDTO(1L, "lol", "Mouse", BigDecimal.valueOf(10), "lol");
 
     when(productRepository.findAll(pageable)).thenReturn(productPage);
     when(productMapper.toProductDTO(product)).thenReturn(dto);
@@ -255,7 +255,7 @@ void findProductTest(){
             1
     );
 
-    ProductDTO dto = new ProductDTO("lol", "Keyboard", BigDecimal.valueOf(10), "lol");
+    ProductDTO dto = new ProductDTO(1L, "lol", "Keyboard", BigDecimal.valueOf(10), "lol");
 
     when(productTypeRepository.findProductTypeByType(type)).thenReturn(Optional.of(productType));
 

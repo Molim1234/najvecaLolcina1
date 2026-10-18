@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 public class CreateProductRequest {
     @NotBlank
-    @Size(max = 100)
+    @Size(max = 100, min = 2)
     private String name;
     @PositiveOrZero
     private int quantity;
@@ -19,6 +19,7 @@ public class CreateProductRequest {
     @Size(max = 250)
     private String description;
     @NotBlank
+    @Size(max = 30, min = 2)
     private String type;
 
     public CreateProductRequest(String name, int quantity, BigDecimal price, String description, String type) {
