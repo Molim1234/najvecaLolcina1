@@ -3,6 +3,7 @@ package com.example.najvecaLolcina.dto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class CreateReviewRequest {
     @NotNull
@@ -12,6 +13,7 @@ public class CreateReviewRequest {
     @Max(5)
     private int rate;
 
+    @Size(max = 250)
     private String description;
 
     public CreateReviewRequest(Long productId, int rate, String description) {

@@ -239,8 +239,10 @@ public class OrderService {
                 .findMyyyUserByName(userr);
 
         var cart = authenticatedUser.getCart();
-        if(cart==null){
-            throw new NoSuchElementException("Person doesnt have items in cart");
+        if (cart == null || cart.getCartItemList().isEmpty()) {
+            throw new NoSuchElementException(
+                    "Cart doesn't have any items"
+            );
         }
         for(CartItem item: cart.getCartItemList()){
             var product = item.getProduct();

@@ -2,6 +2,7 @@ package com.example.najvecaLolcina.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ public class Review {
     @Column(name = "rate")
     private int rate;
 
+    @Size(max = 250)
     @Column(name = "description")
     private String description;
 

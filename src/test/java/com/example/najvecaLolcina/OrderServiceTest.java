@@ -346,9 +346,7 @@ public class OrderServiceTest {
         when(couponRepository.findCouponByCoupon("coupon")).thenReturn(Optional.of(coupon));
         when(myyyUserRepo.findMyyyUserByName("testUser")).thenReturn(user);
 
-        var result = orderService.checkCoupon("coupon");
-
-        assertEquals(0, result.compareTo(BigDecimal.ZERO));
+       assertThrows(NoSuchElementException.class, ()->{orderService.checkCoupon("coupon");});
     }
 
     @Test

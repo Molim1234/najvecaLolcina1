@@ -81,7 +81,7 @@ public class ProductService {
     @Transactional
 
     public ProductDTO patchProduct(Long id, PatchProductRequest request) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdUpdate(id)
                 .orElseThrow(() ->
                         new NoSuchElementException("Product not found"));
 

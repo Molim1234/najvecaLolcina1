@@ -281,7 +281,7 @@ void findProductTest(){
     var product = new Product("lol", 10, BigDecimal.valueOf(10), "lol");
     product.setId(1L);
 
-    when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+    when(productRepository.findByIdUpdate(1L)).thenReturn(Optional.of(product));
 
     productService.patchProduct(1L, patch);
 
@@ -306,7 +306,7 @@ void findProductTest(){
         );
         product.setId(1L);
 
-        when(productRepository.findById(1L))
+        when(productRepository.findByIdUpdate(1L))
                 .thenReturn(Optional.of(product));
 
         productService.patchProduct(1L, patch);
@@ -335,7 +335,7 @@ void findProductTest(){
         );
         product.setId(1L);
 
-        when(productRepository.findById(1L))
+        when(productRepository.findByIdUpdate(1L))
                 .thenReturn(Optional.of(product));
 
         productService.patchProduct(1L, patch);
@@ -362,7 +362,7 @@ void findProductTest(){
         var patch = new PatchProductRequest();
         patch.setQuantity(2);
 
-        when(productRepository.findById(1L))
+        when(productRepository.findByIdUpdate(1L))
                 .thenReturn(Optional.empty());
 
         assertThrows(
@@ -387,7 +387,7 @@ void findProductTest(){
         var patch = new PatchProductRequest();
         patch.setQuantity(5);
 
-        when(productRepository.findById(1L))
+        when(productRepository.findByIdUpdate(1L))
                 .thenReturn(Optional.of(product));
 
         productService.patchProduct(1L, patch);
